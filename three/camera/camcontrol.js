@@ -1,14 +1,20 @@
 import {
     camera
-} from "./main/main.js";
+} from "../main/main.js";
 
 
 //Camera controls
 //Some basic camera controls because debugging with a single view is annoying
 //WASD translates, arrow keys rotate
 //very very basic but for debugging
+//-------------------------------------------------------------------------
+//Add listeners
+//-------------------------------------------------------------------------
 document.addEventListener('keydown', keyDownHandler, false);
 document.addEventListener('keyup', keyUpHandler, false);
+//-------------------------------------------------------------------------
+//Init variables
+//-------------------------------------------------------------------------
 var rightPressed = false;
 var leftPressed = false;
 var upPressed = false;
@@ -17,7 +23,9 @@ var wPressed = false;
 var aPressed = false;
 var sPressed = false;
 var dPressed = false
-
+//-------------------------------------------------------------------------
+//Key down handler
+//-------------------------------------------------------------------------
 function keyDownHandler(event) {
     if (event.keyCode == 39) {
         rightPressed = true;
@@ -41,7 +49,9 @@ function keyDownHandler(event) {
     }
 }
 
-
+//-------------------------------------------------------------------------
+//Key up handler
+//-------------------------------------------------------------------------
 function keyUpHandler(event) {
     if (event.keyCode == 39) {
         rightPressed = false;
@@ -64,7 +74,10 @@ function keyUpHandler(event) {
         sPressed = false;
     }
 }
-
+//-------------------------------------------------------------------------
+//Actual logic for camera control
+//At the moment it's tank controls
+//-------------------------------------------------------------------------
 function cameraControl() {
     if (rightPressed) {
         camera.rotation.y += .02;
@@ -72,13 +85,13 @@ function cameraControl() {
         camera.rotation.y -= .02;
     }
     if (downPressed) {
-        camera.rotation.z -= .02;
+        camera.rotation.x -= .02;
     } else if (upPressed) {
-        camera.rotation.z += .02;
+        camera.rotation.x += .02;
     }
-    if (wPressed) {
+    if (sPressed) {
         camera.position.z += .4;
-    } else if (sPressed) {
+    } else if (wPressed) {
         camera.position.z -= .4;
     }
     if (dPressed) {

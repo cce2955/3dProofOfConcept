@@ -1,3 +1,4 @@
+import {positions} from '../player/enumerations.js'
 //Set bounds for..everything
 var players = {
     //Player stats
@@ -14,10 +15,10 @@ var players = {
     pass: 0,
     block: 0,
     luck: 0,
-    posX: 0,
-    posY: 0,
-    posZ: 0,
     skillPoints: 0,
+    position: positions.NULL,
+    possession: false,
+    teamBall: false,
 
     //Getters and setters
     //Get the ID of the current player
@@ -84,23 +85,11 @@ var players = {
         this.luck = luck;
     },
 
-    getPosX: function () {
-        return this.posX;
+    getPosition: function(){
+        return this.positions;
     },
-    setPosX: function (posX) {
-        this.posX = posX;
-    },
-    getPosY: function () {
-        return this.posY;
-    },
-    setPosY: function (posY) {
-        this.posY = posY;
-    },
-    getPosZ: function () {
-        return this.posZ;
-    },
-    setPosZ: function (posZ) {
-        this.posZ = posZ;
+    setPosition: function(positions){
+        this.positions = positions
     },
     //This feature is defunct unless I reimplement it later
     getSkillPoints: function () {
@@ -117,7 +106,11 @@ var players = {
     setMaxPlayers: function (max) {
         this.max = max;
     }
+
 }
+//-------------------------------------------------------------------------
+//Set bounds for walls, mostly used for collision
+//-------------------------------------------------------------------------
 var walls = {
     xWallWidth: 0,
     yWallWidth: 0,
@@ -141,6 +134,10 @@ var walls = {
         this.zWallWidth = zWallWidth;
     }
 }
+//-------------------------------------------------------------------------
+//Set bounds to determine who possesses the ball and if you are on the same
+//team or not
+//-------------------------------------------------------------------------
 var possession = {
     //Determine if the player has the ball
     ball: true,
@@ -159,6 +156,9 @@ var possession = {
         this.teamBall = teamBall;
     }
 }
+//-------------------------------------------------------------------------
+//Exports
+//-------------------------------------------------------------------------
 export {
     players,
     walls,

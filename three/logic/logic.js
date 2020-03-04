@@ -2,18 +2,21 @@ import {
     players,
     walls,
     possession
-} from '../setBounds.js';
+} from './setBounds.js';
 import {
     cGeometry,
     cMaterialGreen,
     cMaterialRed
-} from '../cube.js';
-import {
-    sphere
-} from '../ball.js';
+} from '../player/cube.js';
 import {
     createdCharacter
-} from '../character.js';
+} from '../player/character.js';
+import {
+    positions
+} from '../player/enumerations.js'
+import {
+    setPositions
+} from '../player/fieldPositions.js';
 //Right now this is a very basic playground as I get readjusted to JS and learn
 // how THREE works
 //I'll make something substantial with this in due time.
@@ -23,7 +26,12 @@ import {
 
 
 var cube;
-players.setMaxPlayers(10);
+//-------------------------------------------------------------------------
+//Set 11 players, 10 on field, 2 in goal
+//(arrays start at 0!)
+//-------------------------------------------------------------------------
+players.setMaxPlayers(11);
+
 //So this no longer applies to walls
 //It only applies to the pieces themselves
 //do a check to see if it's near the wall, and only start 
@@ -39,7 +47,9 @@ const newChar = new Array();
 var plane, ceiling, floor;
 //variables for exporting
 var wall = [];
-//Wall array to store our walls in
+var goal = [];
+var ballLanding;
+//Arrays for storing planes
 
 //-------------------------------------------------------------------------
 //Not necessary anymore, this will be kept for legacy, delete upon
@@ -61,9 +71,7 @@ function generatePlayers() {
     //Generate an array of players based on the max amount of players
     //Stats are completely random for now
     //generateEntities(); //This is now just a waste of CPU honestly
-    players.setPosX(0);
-    players.setPosY(0);
-    players.setPosZ(0);
+
     for (let i = 0; i <= players.getMaxPlayers(); i++) {
         if (i > players.getMaxPlayers() / 2) {
             teamNum = 2; //Set them to team 2
@@ -73,23 +81,24 @@ function generatePlayers() {
             //Start proliferating the opposing team
         }
         //Create a new mesh, with an ID matching i, team number either 1 or 2
-        //Completely random stats, all positions set to zero (for now)
+        //Completely random stats, set
+        //field position, and if they have possession of ball as well as
+        //team possession of ball
         newChar.push(new createdCharacter(new THREE.Mesh(cGeometry,
                 cMaterial), i, teamNum, Math.floor(Math.random() * 10), Math
             .floor(Math.random() * 10), Math.floor(Math.random() * 10),
             Math.floor(Math.random() * 10), Math.floor(Math.random() *
                 10), Math.floor(Math.random() * 10), Math.floor(Math.random() *
-                10), players.getPosX(), players.getPosY(),
-            players.getPosZ()));
+                10), positions.NULL, false,
+            false));
 
         //Create a new createdCharacter object, call it at newChar[index]
         //console.log(newChar[i]);
     }
+    setPositions();
 }
 
-function generatePositions() {
 
-}
 //-------------------------------------------------------------------------
 //Generate the Skybox
 //-------------------------------------------------------------------------
@@ -97,7 +106,12 @@ function generatePlane() {
     //Generate a checkerboard plane
 
     var pGeometry = new THREE.PlaneGeometry(100, 100, 32);
-    //Generate geometry
+    var goalGeometry = new THREE.PlaneGeometry(10,10,32);
+    var bLandGeometry = new THREE.PlaneGeometry(30,30,32);
+    
+    //-------------------------------------------------------------------------
+    //Do some basic setup to generate a checkerboard pattern on the plane
+    //-------------------------------------------------------------------------
     var pCheckerboardMaterial = [];
     //Create an array to store our checkerboard in
     pCheckerboardMaterial.push(new THREE.MeshBasicMaterial({
@@ -118,13 +132,18 @@ function generatePlane() {
         pGeometry.faces[j + 1].materialIndex = ((i + Math.floor(i / 8)) % 2);
 
     }
-    var pMaterial = new THREE.MeshBasicMaterial({
-        color: 0xffffff,
+    var pMaterial1 = new THREE.MeshBasicMaterial({
+        color: 0xFB3AEC,
+        side: THREE.DoubleSide
+    });
+    var pMaterial2 = new THREE.MeshBasicMaterial({
+        color: 0x4ec2fd,
         side: THREE.DoubleSide
     });
 
-    //-------------------------
+    //-------------------------------------------------------------------------
     //Make the "box"
+    //-------------------------------------------------------------------------
     floor = new THREE.Mesh(pGeometry, new THREE.MeshFaceMaterial
         (pCheckerboardMaterial));
 
@@ -135,7 +154,19 @@ function generatePlane() {
     ceiling = new THREE.Mesh(pGeometry, new THREE.MeshFaceMaterial
         (pCheckerboardMaterial));
 
+    //-------------------------------------------------------------------------
+    //Make a goal
+    //-------------------------------------------------------------------------
+    goal.push(new THREE.Mesh(goalGeometry, new THREE.MeshFaceMaterial(pMaterial1)));
+    goal.push(new THREE.Mesh(goalGeometry, new THREE.MeshFaceMaterial(pMaterial1)));
+    ballLanding = new THREE.Mesh(bLandGeometry, new THREE.MeshFaceMaterial(pMaterial2));
     //Init values for Skybox
+    ballLanding.rotation.x = 1.55;
+    ballLanding.position.y = -10;
+    goal[0].position.x = 45;
+    goal[0].rotation.y = 1.55;
+    goal[1].position.x = -45;
+    goal[1].rotation.y = 1.55;
     floor.rotation.x = 1.55; //1.55 rads to flatten the plane
     floor.position.y = -50;
     wall[0].position.z = 50; //Set some walls
@@ -154,15 +185,12 @@ function generatePlane() {
 //-------------------------------------------------------------------------
 
 
-//-------------------------------------------------------------------------
-//Read a text file
-//-------------------------------------------------------------------------
 
 //-------------------------------------------------------------------------
 //Exports
 //-------------------------------------------------------------------------
 export {
-    
+
     generatePlayers,
     cubeArray,
     players,
@@ -171,68 +199,7 @@ export {
     generatePlane,
     floor,
     ceiling,
-    wall
+    wall,
+    ballLanding,
+    goal
 };
-
-
-//---------------------------------------------------------------------------------
-//For now this is legacy but after making my classes and variables I'll compile things here and
-//let main.js parse through it 
-//Upon completion everything below this will be deleted
-
-/*
-import {sphere} from './ball.js';
-import { cubeArray} from './cube.js';
-
-
-
-//import {setBounds} from './setBounds.js';
-//Set up Scene
-var scene = new THREE.Scene();
-var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
-var renderer = new THREE.WebGLRenderer();
-
-//set up light (Broken at the moment)
-
-var light = new THREE.PointLight (0xffffff, 1, 100);
-
-//Setting plane
-var pGeometry = new THREE.PlaneGeometry( 150, 120, 132 );
-var pMaterial = new THREE.MeshBasicMaterial( {color: 0xffffff, side: THREE.DoubleSide} );
-var plane = new THREE.Mesh( pGeometry, pMaterial );
-
-scene.add( plane );
-//Set up render area
-renderer.setSize( window.innerWidth, window.innerHeight );
-document.body.appendChild( renderer.domElement );
-
-//Set light (broken at the moment)
-light.position.set(0,0,0);
-//Set cube position
-//set cubeArray positions here or in its own file
-
-
-//set sphere position
-sphere.position.z = -25;
-
-//Figuring out classes right now, attempting to assign multiple cubes
-
-
-
-//Add everything to scene
-scene.add(light);
-scene.add(cubeArray[0]);
-scene.add(cubeArray[1]);
-scene.add(sphere);
-
-//Set camera position
-
-//Animate it all
-function animate() {
-    requestAnimationFrame( animate );
-    renderer.render( scene, camera );
-}
-
-
-animate();
-*/
