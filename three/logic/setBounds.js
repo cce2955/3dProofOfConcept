@@ -1,4 +1,6 @@
-import {positions} from '../player/enumerations.js'
+import {
+    positions
+} from '../player/enumerations.js'
 //Set bounds for..everything
 var players = {
     //Player stats
@@ -85,10 +87,10 @@ var players = {
         this.luck = luck;
     },
 
-    getPosition: function(){
+    getPosition: function () {
         return this.positions;
     },
-    setPosition: function(positions){
+    setPosition: function (positions) {
         this.positions = positions
     },
     //This feature is defunct unless I reimplement it later
@@ -112,9 +114,9 @@ var players = {
 //Set bounds for walls, mostly used for collision
 //-------------------------------------------------------------------------
 var walls = {
-    xWallWidth: 0,
-    yWallWidth: 0,
-    zWallWidth: 0,
+    xWallWidth: 50,
+    yWallWidth: 50,
+    zWallWidth: 50,
     getXWallWidth: function () {
         return this.xWallWidth;
     },

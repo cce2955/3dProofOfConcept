@@ -1,7 +1,7 @@
 //-------------------------------------------------------------------------
 //Enumeration definitions
 //-------------------------------------------------------------------------
- const positions = {
+const positions = {
     LF: "Left Fielder",
     RF: "Right Fielder",
     CF: "Center Fielder",
@@ -15,4 +15,6 @@ Object.freeze(positions); //Force the enums to be final
 //-------------------------------------------------------------------------
 //Exports
 //-------------------------------------------------------------------------
-export {positions}
+export {
+    positions
+}

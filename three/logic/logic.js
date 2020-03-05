@@ -106,9 +106,9 @@ function generatePlane() {
     //Generate a checkerboard plane
 
     var pGeometry = new THREE.PlaneGeometry(100, 100, 32);
-    var goalGeometry = new THREE.PlaneGeometry(10,10,32);
-    var bLandGeometry = new THREE.PlaneGeometry(30,30,32);
-    
+    var goalGeometry = new THREE.PlaneGeometry(10, 10, 32);
+    var bLandGeometry = new THREE.PlaneGeometry(30, 30, 32);
+
     //-------------------------------------------------------------------------
     //Do some basic setup to generate a checkerboard pattern on the plane
     //-------------------------------------------------------------------------
@@ -144,15 +144,12 @@ function generatePlane() {
     //-------------------------------------------------------------------------
     //Make the "box"
     //-------------------------------------------------------------------------
-    floor = new THREE.Mesh(pGeometry, new THREE.MeshFaceMaterial
-        (pCheckerboardMaterial));
+    floor = new THREE.Mesh(pGeometry, new THREE.MeshFaceMaterial(pCheckerboardMaterial));
 
     for (let i = 0; i < 4; i++) {
-        wall.push(new THREE.Mesh(pGeometry, new THREE.MeshFaceMaterial
-            (pCheckerboardMaterial)));
+        wall.push(new THREE.Mesh(pGeometry, new THREE.MeshFaceMaterial(pCheckerboardMaterial)));
     }
-    ceiling = new THREE.Mesh(pGeometry, new THREE.MeshFaceMaterial
-        (pCheckerboardMaterial));
+    ceiling = new THREE.Mesh(pGeometry, new THREE.MeshFaceMaterial(pCheckerboardMaterial));
 
     //-------------------------------------------------------------------------
     //Make a goal

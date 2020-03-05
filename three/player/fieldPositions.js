@@ -142,10 +142,11 @@ function setPositions() {
             newChar[element].mesh.position.x = -20;
             newChar[element].mesh.position.z = 0;
             newChar[element].positions = positions.CF;
+            newChar[element].possession = true;
             assignable[0] = true;
-//-------------------------------------------------------------------------
-//For now I'm going to force possession on team 1, this may be perm, may not
-//-------------------------------------------------------------------------            
+            //-------------------------------------------------------------------------
+            //For now I'm going to force possession on team 1, this may be perm, may not
+            //-------------------------------------------------------------------------            
             newChar[element].possession = true;
         }
         if (newChar[element].positions == positions.NULL && assignable[1] ==

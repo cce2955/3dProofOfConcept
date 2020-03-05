@@ -5,3 +5,5 @@ export var material = new THREE.MeshBasicMaterial({
     opacity: .85
 });
 export var sphere = new THREE.Mesh(geometry, material);
+var pivotPoint = new THREE.Object3D();
+sphere.add(pivotPoint);
