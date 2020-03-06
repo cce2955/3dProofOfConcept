@@ -6,7 +6,7 @@
 
 import {
     newChar
-} from '../main/main.js';
+} from '../logic/logic.js';
 import {
     sphere
 } from '../ball.js' //Delete this
@@ -16,24 +16,6 @@ import {
 
 /* (mesh, id, team, attack, block, defense, luck, pass, shoot,
         speed, positions, possession, teamPossession*/
-var guiAttackArray = [];
-var guiBlockArray = [];
-var guiDefenseArray = [];
-var guiLuckArray = [];
-var guiPassArray = [];
-var guiShootArray = [];
-var Attack = []
-
-function populateArrays() {
-
-    newChar.forEach(player => {
-        guiAttackArray.push(player.attack)
-    })
-
-}
-
-
-
 var guiBallObj = new function ballGUI() {
     this.ballY = sphere.position.y;
     this.ballX = sphere.position.x;
@@ -44,7 +26,19 @@ var guiBallObj = new function ballGUI() {
 //Working on away to populate the playerOBJ
 
 var guiPlayerObj = new function playerGUI() {
-    //    this.Attack = newChar[0].attack;
+    this.Position = "NULL";
+    this.A = 0;     //Attack
+    this.B = 0;     //Block
+    this.D = 0;     //Defense
+    this.L = 0;     //Luck
+    this.P = 0;     //Pass
+    this.S = 0;     //Shoot
+    
+    //Create empty variables
+    //As a character is being displayed these values will update
+    //in real time, variables are shorthand for screen space
+   
+   
 }
 
 
@@ -54,6 +48,5 @@ var guiPlayerObj = new function playerGUI() {
 
 export {
     guiBallObj,
-    guiPlayerObj,
-    populateArrays
+    guiPlayerObj
 }

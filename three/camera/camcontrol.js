@@ -2,6 +2,7 @@ import {
     camera,
     animate
 } from "../main/main.js";
+import { sphere, pivotPoint } from "../ball.js";
 
 
 //Camera controls
@@ -95,18 +96,13 @@ function keyUpHandler(event) {
 //At the moment it's tank controls
 //-------------------------------------------------------------------------
 function cameraControl() {
-    var x = camera.position.x,
-        y = camera.position.y,
-        z = camera.position.z,
-        rotSpeed = 0.01;
+   
     if (rightPressed) {
-        // camera.rotation.y += .02;
-        camera.position.x = x * Math.cos(rotSpeed) - z * Math.sin(rotSpeed);
-        camera.position.z = z * Math.cos(rotSpeed) + x * Math.sin(rotSpeed);
+        pivotPoint.rotation.y += .02;
+        
     } else if (leftPressed) {
-        // camera.rotation.y -= .02;
-        camera.position.x = x * Math.cos(rotSpeed) + z * Math.sin(rotSpeed);
-        camera.position.z = z * Math.cos(rotSpeed) - x * Math.sin(rotSpeed);
+        pivotPoint.rotation.y -= .02;
+        
     }
     if (downPressed) {
         camera.rotation.x -= .02;

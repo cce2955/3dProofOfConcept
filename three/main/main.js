@@ -1,6 +1,9 @@
-//import { cubeArray } from '../cube.js';
+//-------------------------------------------------------------------------
+//My army of imports, main's entire purpose is to consolidate everything
+//I'm certain I could be doing this incorrectly but this is an easily breakable
+//habit if the right job comes along
+//-------------------------------------------------------------------------
 import {
-    cubeArray,
     players,
     generatePlayers,
     generatePlane,
@@ -15,26 +18,26 @@ import {
     kickOff
 } from '../logic/kickoff.js'
 import {
-    whoHasBall
+    whoHasBall,
+    defineTeamPossession
 } from '../logic/holdBall.js'
 import {
-    sphere
+    sphere,
+    pivotPoint,
+    lockSphere
 } from '../ball.js';
 import {
     cameraControl,
-    play
+    
 } from '../camera/camcontrol.js';
-import {
-    populateArrays,
-
-    guiBallObj
-} from '../gui/playerGui.js'
 import {
     gui,
     updateGUI,
     addGui,
-    destroyGui
+    
 } from '../gui/gui.js';
+import { passBall } from '../logic/pass.js';
+
 
 //-------------------------------------------------------------------------
 //Here is where everything comes together, I was originally going to take
@@ -49,6 +52,7 @@ var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera(75, window.innerWidth /
     window.innerHeight, 0.1, 1000);
 var renderer = new THREE.WebGLRenderer();
+
 //-------------------------------------------------------------------------
 //so I'm going to do something a little dangerous, I'm at a point where I 
 //need gamestates, so I'm going to create an array of events. For each 
@@ -58,7 +62,7 @@ var renderer = new THREE.WebGLRenderer();
 ///hasBall will be flipped off, once kick off is done, that's flipped off
 //while hasball will be flipped on so only the right things will animated 
 //at the right time.
-var maxElements = 3;
+var maxElements = 100;
 var boolArray = [];
 for (var i = 0; i < maxElements; i++) {
     boolArray[i] = false;
@@ -68,8 +72,6 @@ for (var i = 0; i < maxElements; i++) {
 //-------------------------------------------------------------------------
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
-
-
 //-------------------------------------------------------------------------
 //Create players
 //-------------------------------------------------------------------------
@@ -101,7 +103,7 @@ console.log(sphere);
 scene.add(floor);
 scene.add(goal[0]); //Team 2 goal
 scene.add(goal[1]); //Team 1 Goal
-scene.add(ballLanding);
+scene.add(ballLanding); //Center area where ball launches from
 scene.add(wall[0]);
 scene.add(wall[1]);
 scene.add(wall[2]);
@@ -109,61 +111,70 @@ scene.add(wall[3]);
 scene.add(ceiling);
 scene.add(camera);
 scene.add(sphere);
-
-
+scene.add(lockSphere);
+lockSphere.position.set(100, 100, 100) //Keep it off screen until needed
+pivotPoint.add(camera);
+scene.add(pivotPoint);
 //-------------------------------------------------------------------------
-//Set up GUI
+//Add Gui and hide it from the user
 //-------------------------------------------------------------------------
-//This is a test gui, after getting this working I'll set up an AI to 
-//create GUI states to show only relevant information as needed
-populateArrays();
+addGui()
 
-addGui();
-
+gui.close(); //Add GUI and close it
 //-------------------------------------------------------------------------
-camera.position.z = sphere.position.z + 15;;
-
 boolArray[0] = true; //init first bool so kickOff will work
-
-camera.position.set(sphere.position.x, sphere.position.y, sphere.position.z + 10);
 //-------------------------------------------------------------------------
 //Animate the scene
 //-------------------------------------------------------------------------
-
-
-
+function updateCamera() {
+    camera.position.x = pivotPoint.position.x
+    camera.position.y = pivotPoint.position.y
+    camera.position.z = pivotPoint.position.z + 7; //plus 7 so it'll stay away 
+    //from the ball
+    pivotPoint.position.x = sphere.position.x
+    pivotPoint.position.y = sphere.position.y
+    pivotPoint.position.z = sphere.position.z
+} //Call when you want camera to follow ball
+//If ball isn't meant to be followed keep it away
+updateCamera(); //init camera
 function animate() {
-
-    updateGUI();
-
-    requestAnimationFrame(animate);
-    renderer.render(scene, camera);
-    //-------------------------------------------------------------------------
-    //Disable this for manual camera control
-
-    camera.lookAt(sphere.position);
-    //-------------------------------------------------------------------------
+    cameraControl(); //Give user basic ability to rotate 
     //-------------------------------------------------------------------------
 
-    cameraControl();
+    //-------------------------------------------------------------------------
+    updateGUI(); //Update GUI info, if gui is hidden this still updates anyway
+    requestAnimationFrame(animate); //Anime
+    renderer.render(scene, camera); //Render the scene and display through the camera
+    camera.lookAt(sphere.position); //Every frame the camera will look at (but not 
+    //move with) the sphere
     if (boolArray[0] == true) {
         kickOff(sphere); //Kick off
     }
+
     if (boolArray[1] == true) {
+        defineTeamPossession(); //Figure out who is available to hand the ball
         whoHasBall(sphere); //Give ball to initial player
+        gui.open(); //Show Gui to user, it'll show the stats of whoever is
+        //holding the ball
+        updateCamera(); //Update the camera's position so it'll rotate correctly
     }
+    if (boolArray[2] == true){
+        passBall();
+    }
+    console.log(lockSphere.position.x)
+}
 
 
-    camera.lookAt(sphere.position);
-}
-if (!play) {
-    animate();
-}
+
+
+animate();
+
 
 
 export {
     camera,
     boolArray,
     newChar,
-    animate
+    animate,
+    scene
 };

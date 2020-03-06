@@ -1,9 +1,18 @@
-export var geometry = new THREE.SphereGeometry(1, 64, 64);
-export var material = new THREE.MeshBasicMaterial({
+var geometry = new THREE.SphereGeometry(1, 64, 64);
+var material = new THREE.MeshBasicMaterial({
     color: 0x3358FF,
-    wireframe: true,
+    wireframe: true, //Make a blue material to hold over the ball
+    opacity: .85
+});
+//New sphere for lock on reticle
+var lGeometry = new THREE.SphereGeometry(.2, 32, 32);
+var lMaterial = new THREE.MeshBasicMaterial({
+    color: 0xffd000,
+    wireframe: true, //Make a yellow material for the lockon
     opacity: .85
 });
 export var sphere = new THREE.Mesh(geometry, material);
-var pivotPoint = new THREE.Object3D();
-sphere.add(pivotPoint);
+export var lockSphere = new THREE.Mesh(lGeometry, lMaterial)
+export var pivotPoint = new THREE.Object3D;
+
+

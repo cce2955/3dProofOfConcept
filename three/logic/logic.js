@@ -89,8 +89,7 @@ function generatePlayers() {
             .floor(Math.random() * 10), Math.floor(Math.random() * 10),
             Math.floor(Math.random() * 10), Math.floor(Math.random() *
                 10), Math.floor(Math.random() * 10), Math.floor(Math.random() *
-                10), positions.NULL, false,
-            false));
+                10), positions.NULL, false, false));
 
         //Create a new createdCharacter object, call it at newChar[index]
         //console.log(newChar[i]);

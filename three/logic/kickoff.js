@@ -10,9 +10,7 @@ import {
 } from '../main/main.js';
 var momentum = 0.000001;
 var kickUp = true;
-var destX, destY, destZ;
-var isObjPos = [];
-var isElePos = [];
+
 
 function kickOff(object) {
 

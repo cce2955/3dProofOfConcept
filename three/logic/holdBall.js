@@ -60,7 +60,9 @@ function whoHasBall(object) {
 
             if (sphereCubeColl(object, player)) {
                 //If ball is touching player, drop out of this method
-                boolArray[1] = false;
+                boolArray[1] = false; //End  Hold Ball
+                boolArray[2] = true; //This should be free roaming, but I'm
+                //doing the pass logic first, change later
             }
         }
     })
@@ -69,6 +71,21 @@ function whoHasBall(object) {
     //boolArray[1] = false;
 }
 
+function defineTeamPossession(){ //Quick function to determine if you're on 
+//a team that has the ball
+    var teamID;
+    newChar.forEach(player =>{
+        if (player.possession){
+            teamID = player.team;
+        }
+    })
+    newChar.forEach(player =>{
+        if (teamID == player.team){
+            player.teamBall = true;
+        }
+    })
+}
+
 export {
-    whoHasBall
+    whoHasBall, defineTeamPossession
 }
